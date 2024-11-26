@@ -5,6 +5,8 @@ import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import * as Location from 'expo-location';
+import firebaseConfig, { db, storage } from './firebase';
+import { addDoc, collection } from 'firebase/firestore';
 
 export default function App() {
   const [image, setImage] = useState(null);
@@ -62,6 +64,30 @@ export default function App() {
     }
   };
 
+  const addData = async () => {
+    if (!image) {
+      console.log("No image to save!");
+      return;
+    } else if (!location) {
+      console.log("No location data available to save!");
+      return;
+    }
+    try {
+      const docRef = await addDoc(collection(db, "data"), {
+        longitude: location.coords.longitude,
+        latitude: location.coords.latitude,
+        photo_url: image,
+      });
+      if (Platform.OS === "android") {
+        console.log("Document written from phone with ID: ", docRef.id);
+      } else {
+        console.log("Document written with ID: ", docRef.id);
+      }
+    } catch (err) {
+      console.error("Error occured ", err);
+    }
+  }
+
   const saveFile = async () => {
     try {
       if (!image) {
@@ -111,6 +137,7 @@ export default function App() {
 
   const getLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
+
     if (status !== 'granted') {
       console.log('Permission to access location was denied');
       return;
@@ -121,36 +148,6 @@ export default function App() {
     setLocation(location);
   }
 
-  const hasLocationPermission = async () => {
-    if (Platform.OS === "android" && Platform.Version < 23) {
-      return true;
-    }
-
-    const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-    );
-
-    if (hasPermission) {
-      return true;
-    }
-
-    const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-    );
-
-    if (status === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
-    }
-
-    if (status === PermissionsAndroid.RESULTS.DENIED) {
-      console.log("Location permission denied by user.");
-    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-      console.log("Location permission revoked by user.");
-    }
-
-    return false;
-  }
-
   return (
     <View style={styles.container}>
       <Text>Hans Philemon Limanza - 00000070710</Text>
@@ -158,6 +155,7 @@ export default function App() {
       <Button title="Open Gallery" onPress={openImagePicker} />
       <Button title="Create File" onPress={saveFile} />
       <Button title="Get Geo Location" onPress={getLocation} />
+      <Button title="Add Data" onPress={addData} />
       {image && (
         <Image source={{ uri: image }} style={{ width: 300, height: 300 }} />
       )}

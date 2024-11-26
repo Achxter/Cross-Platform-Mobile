@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "57368912798",
+    "project_id": "crossplat-week11-61730",
+    "storage_bucket": "crossplat-week11-61730.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57368912798:android:010d28e394df82d2e72c8f",
+        "android_client_info": {
+          "package_name": "com.crossplatform.umn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAkOEHBq7YqYIMyaUtiUnHBxOYlC1AWbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
