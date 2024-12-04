@@ -33,3 +33,7 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Google services
+google-services.json
+crossplat-week11-61730-firebase-adminsdk-3dcgn-e22e6846e7.json
